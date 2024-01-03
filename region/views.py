@@ -5,7 +5,6 @@ from rest_framework import status
 from django.contrib.staticfiles import finders
 from .models import *
 from .serializers import *
-import json
 from .regions import regions
 
 
