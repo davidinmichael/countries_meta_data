@@ -1,2 +1,4 @@
 countries.json
 regions.json
+regions.py
+db.sqlite3

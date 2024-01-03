@@ -3,6 +3,6 @@ from .models import *
 
 
 class RegionSerializer(serializers.ModelSerializer):
-    class meta:
+    class Meta:
         model = Region
         fields = "__all__"
