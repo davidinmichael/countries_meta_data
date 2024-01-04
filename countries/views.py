@@ -14,8 +14,7 @@ class AllCountries(APIView, PageNumberPagination):
         all_countries = Country.objects.all()
         response = self.paginate_queryset(all_countries, request, view=self)
         serializer = CountrySerializer(response, many=True)
-        data = self.get_paginated_response(serializer.data)
-        return Response(data, status.HTTP_200_OK)
+        return self.get_paginated_response(serializer.data)
 
 
 class AddCountries(APIView):

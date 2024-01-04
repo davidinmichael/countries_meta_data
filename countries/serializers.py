@@ -5,7 +5,7 @@ from region.models import Region
 
 class CountrySerializer(serializers.ModelSerializer):
     region = serializers.SlugRelatedField(
-        slug_field="name", queryset=Region.objects.all())
+        slug_field="name", queryset=Region.objects.all(), source="region")
 
     class Meta:
         model = Country
