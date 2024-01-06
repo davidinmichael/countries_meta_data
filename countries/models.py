@@ -15,7 +15,7 @@ class Country(models.Model):
     flag = models.SlugField(max_length=50)
 
     def generate_flag_url(self):
-        return f"https://flagcdn.com/256x192/{self.iso2}.png"
+        return f"https://flagcdn.com/256x192/{self.iso2.lower()}.png"
 
     def save(self, *args, **kwargs):
         if not self.flag:

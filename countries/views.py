@@ -17,6 +17,11 @@ class AllCountries(APIView, PageNumberPagination):
         return self.get_paginated_response(serializer.data)
 
 
+# class AddCountries(APIView):
+#     def get(self, request):
+#         countries = Country.objects.all().delete()
+#         return Response({"message": "All Countries deleted"}, status.HTTP_200_OK)
+
 class AddCountries(APIView):
     def get(self, request):
         for country in countries:
@@ -26,4 +31,4 @@ class AddCountries(APIView):
                     iso3=country["iso3"], numeric_code=country["numeric_code"],
                     phone_code=country["phone_code"], currency=country["currency"],
                     currency_name=country["currency_name"])
-        return Response({"message": "All Countries Added"}, status.HTTP_201)
+        return Response({"message": "All Countries Added"}, status.HTTP_200)
