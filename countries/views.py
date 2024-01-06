@@ -22,8 +22,7 @@ class AddCountries(APIView):
         for country in countries:
             if country["capital"]:
                 Country.objects.create(
-                    name=country["name"], capital=country["capital"],
-                    region=country["region"], iso2=country["iso2"],
+                    name=country["name"], capital=country["capital"], iso2=country["iso2"],
                     iso3=country["iso3"], numeric_code=country["numeric_code"],
                     phone_code=country["phone_code"], currency=country["currency"],
                     currency_name=country["currency_name"])
