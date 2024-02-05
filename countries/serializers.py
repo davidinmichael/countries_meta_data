@@ -1,12 +1,11 @@
 from rest_framework import serializers
 from .models import Country
 from region.models import Region
+from region.serializers import *
 
 
 class CountrySerializer(serializers.ModelSerializer):
-    # region = serializers.SlugRelatedField(
-    #     slug_field="name", queryset=Region.objects.all(), source="region")
-
+    region = RegionSerializer()
     class Meta:
         model = Country
         fields = "__all__"

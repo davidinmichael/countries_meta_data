@@ -5,7 +5,7 @@ from region.models import Region
 class Country(models.Model):
     name = models.CharField(max_length=50)
     capital = models.CharField(max_length=50)
-    # region = models.ForeignKey(Region, on_delete=models.CASCADE)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
     iso2 = models.CharField(max_length=5)
     iso3 = models.CharField(max_length=5)
     numeric_code = models.CharField(max_length=10)
