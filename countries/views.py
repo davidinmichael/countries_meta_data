@@ -22,7 +22,7 @@ class CreateCurrency(APIView):
 class CreateCountry(APIView):
     def get(self, request):
         for place in places:
-            
+
             currency = Currency.objects.get(name=place["currency_name"])
             try:
                 Country.objects.get(name=place["name"])
@@ -54,6 +54,19 @@ class CreateState(APIView):
                     identifier=state["id"])
         return Response({"message": "All States created"})
 
+
+class CreateCity(APIView):
+    def get(self, request):
+        for place in places:
+            for state in place["states"]:
+                state_instance = State.objects.get(name=state["name"])
+                for city in state["cities"]:
+                    try:
+                        City.objects.get(name=city["name"])
+                    except City.DoesNotExist:
+                        city_instance = City.objects.create(name=city["name"], state=state_instance,
+                        latitude=city["latitude"], longitude=city["longitude"])
+        return Response({"message": "All Cities created"})
 
 class AllCountries(APIView, PageNumberPagination):
     def get(self, request):
