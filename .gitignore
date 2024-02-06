@@ -3,3 +3,5 @@ regions.json
 regions.py
 db.sqlite3
 countries.py
+places.py
+migrations/

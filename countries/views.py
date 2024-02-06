@@ -7,6 +7,52 @@ from rest_framework.pagination import PageNumberPagination
 from .models import *
 from .serializers import *
 from .countries import countries
+from .places import places
+
+class CreateCurrency(APIView):
+    def get(self, request):
+        for place in places:
+            try:
+                currency_instance = Currency.objects.get(name=place["currency_name"])
+            except Currency.DoesNotExist:
+                currency = Currency.objects.create(name=place["currency_name"], currency_symbol=place["currency_symbol"], currency=place["currency"])
+        return Response({"message": "All currency created"})
+
+
+class CreateCountry(APIView):
+    def get(self, request):
+        for place in places:
+            
+            currency = Currency.objects.get(name=place["currency_name"])
+            try:
+                Country.objects.get(name=place["name"])
+            except Country.DoesNotExist:
+                country = Country.objects.create(name=place["name"],
+                capital=place["capital"],
+                phone_code=place["phone_code"],
+                currency=currency,
+                iso2=place["iso2"],
+                iso3=place["iso3"],
+                latitude=place["latitude"],
+                longitude=place["longitude"])
+        return Response({"message": "All Countries created"})
+    
+
+class CreateState(APIView):
+    def get(self, request):
+        for place in places:
+            country = Country.objects.get(name=place["name"])
+            for state in place["states"]:
+                try:
+                    State.objects.get(name=state["name"])
+                except State.DoesNotExist:
+                    states = State.objects.create(name=state["name"],
+                    state_code=state["state_code"],
+                    country=country,
+                    latitude=state["latitude"],
+                    longitude=state["longitude"],
+                    identifier=state["id"])
+        return Response({"message": "All States created"})
 
 
 class AllCountries(APIView, PageNumberPagination):
@@ -16,20 +62,3 @@ class AllCountries(APIView, PageNumberPagination):
         serializer = CountrySerializer(response, many=True)
         return self.get_paginated_response(serializer.data)
 
-
-# class AddCountries(APIView):
-#     def get(self, request):
-#         countries = Country.objects.all().delete()
-#         return Response({"message": "All Countries deleted"}, status.HTTP_200_OK)
-
-class AddCountries(APIView):
-    def get(self, request):
-        for country in countries:
-            region = Region.objects.get(name=country["region"])
-            if country["capital"]:
-                Country.objects.create(
-                    name=country["name"], capital=country["capital"], region=region, iso2=country["iso2"],
-                    iso3=country["iso3"], numeric_code=country["numeric_code"],
-                    phone_code=country["phone_code"], currency=country["currency"],
-                    currency_name=country["currency_name"])
-        return Response({"message": "All Countries Added"}, status.HTTP_200)

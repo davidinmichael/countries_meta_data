@@ -2,7 +2,6 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.staticfiles import finders
 from .models import *
 from .serializers import *
 from .regions import regions
