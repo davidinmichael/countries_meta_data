@@ -68,6 +68,14 @@ class CreateCity(APIView):
                         latitude=city["latitude"], longitude=city["longitude"])
         return Response({"message": "All Cities created"})
 
+
+class CurrencyView(APIView):
+    def get(self, request):
+        """Returns all currencies available in our database."""
+        currency = Currency.objects.all()
+        serializer = CurrencySerializer(currency, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+        
 class AllCountries(APIView, PageNumberPagination):
     def get(self, request):
         all_countries = Country.objects.all()
@@ -75,3 +83,40 @@ class AllCountries(APIView, PageNumberPagination):
         serializer = CountrySerializer(response, many=True)
         return self.get_paginated_response(serializer.data)
 
+
+class StateView(APIView):
+    def get(self, request):
+        """Used to list all states"""
+        states = State.objects.all()
+        serializer = StateSerializer(states, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
+
+class CityView(APIView):
+    def get(self, request):
+        """Used to list all cities"""
+        cities = City.objects.all()
+        serializer = CitySerializer(cities, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
+
+class CountryStateView(APIView):
+    def get(self, request, pk):
+        try:
+            country = Country.objects.get(id=pk)
+        except Country.DoesNotExist:
+            return Response({"message": "This country is not supported yet"}, status.HTTP_404_NOT_FOUND)
+        country_states = country.country_states.all()
+        serializer = StateSerializer(country_states, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
+
+class StateCityView(APIView):
+    def get(self, request, pk):
+        try:
+            state = State.objects.get(id=pk)
+        except State.DoesNotExist:
+            return Response({"message": "This state does not exist or is not supported yet"}, status.HTTP_404_NOT_FOUND)
+        cities = state.state_cities.all()
+        serializer = CitySerializer(cities, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
