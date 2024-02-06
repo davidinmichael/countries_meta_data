@@ -8,7 +8,20 @@ from .models import *
 from .serializers import *
 from .countries import countries
 from .places import places
+from .regions import regions
 
+
+# Used to add the Region from the file
+class CreateRegion(APIView):
+    def get(self, request):
+        for region in regions:
+            try:
+                new_region = Region.objectts.get(name=region['name'])
+            except Region.DoesNotExist:
+                new_region = Region.objects.create(
+                    name=region["name"], wiki_data_Id=region["wikiDataId"])
+        return Response({"message": "Success"})
+    
 class CreateCurrency(APIView):
     def get(self, request):
         for place in places:
@@ -22,13 +35,14 @@ class CreateCurrency(APIView):
 class CreateCountry(APIView):
     def get(self, request):
         for place in places:
-
+            region = Region.objects.get(name=place["region"])
             currency = Currency.objects.get(name=place["currency_name"])
             try:
                 Country.objects.get(name=place["name"])
             except Country.DoesNotExist:
                 country = Country.objects.create(name=place["name"],
                 capital=place["capital"],
+                region=region,
                 phone_code=place["phone_code"],
                 currency=currency,
                 iso2=place["iso2"],
@@ -69,6 +83,13 @@ class CreateCity(APIView):
         return Response({"message": "All Cities created"})
 
 
+
+class RegionList(APIView):
+    def get(self, request):
+        regions = Region.objects.all()
+        serializer = RegionSerializer(regions, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
 class CurrencyView(APIView):
     def get(self, request):
         """Returns all currencies available in our database."""
@@ -76,7 +97,7 @@ class CurrencyView(APIView):
         serializer = CurrencySerializer(currency, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
         
-class AllCountries(APIView, PageNumberPagination):
+class CountryView(APIView, PageNumberPagination):
     def get(self, request):
         all_countries = Country.objects.all()
         response = self.paginate_queryset(all_countries, request, view=self)

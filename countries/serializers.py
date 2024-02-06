@@ -1,7 +1,5 @@
 from rest_framework import serializers
 from .models import *
-from region.models import Region
-from region.serializers import *
 
 
 class CurrencySerializer(serializers.ModelSerializer):
@@ -9,6 +7,12 @@ class CurrencySerializer(serializers.ModelSerializer):
         model = Currency
         fields = "__all__"
 
+
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = "__all__"
+        
 
 class CountrySerializer(serializers.ModelSerializer):
     currency = CurrencySerializer()
