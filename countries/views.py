@@ -1,12 +1,9 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.staticfiles import finders
 from rest_framework.pagination import PageNumberPagination
 from .models import *
 from .serializers import *
-from .countries import countries
 from .places import places
 from .regions import regions
 
@@ -14,9 +11,10 @@ from .regions import regions
 # Used to add the Region from the file
 class CreateRegion(APIView):
     def get(self, request):
+        # region = Region.objects.create(name="Other", wiki_data_Id="None")
         for region in regions:
             try:
-                new_region = Region.objectts.get(name=region['name'])
+                old_region = Region.objects.get(name=region['name'])
             except Region.DoesNotExist:
                 new_region = Region.objects.create(
                     name=region["name"], wiki_data_Id=region["wikiDataId"])
@@ -35,7 +33,10 @@ class CreateCurrency(APIView):
 class CreateCountry(APIView):
     def get(self, request):
         for place in places:
-            region = Region.objects.get(name=place["region"])
+            try:
+                region = Region.objects.get(name=place["region"])
+            except Region.DoesNotExist:
+                region = Region.objects.get(name="Other")
             currency = Currency.objects.get(name=place["currency_name"])
             try:
                 Country.objects.get(name=place["name"])
